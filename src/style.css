@@ -1,0 +1,140 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-width: 375px;
+  width: auto;
+  background: linear-gradient(
+    90deg,
+    rgba(191, 57, 137, 1) 10%,
+    rgba(9, 107, 222, 1) 70%
+  );
+  justify-content: space-between;
+  font-family: arial, serif;
+  font-size: 0.8rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.active-list {
+  font-weight: 800;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+section {
+  margin: 10px;
+}
+
+h1 {
+  font-size: 3rem;
+  font-family: "Arial Narrow Bold", sans-serif;
+  color: white;
+  filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.7));
+  font-weight: 600;
+  font-stretch: extra-condensed;
+}
+
+form {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+input {
+  background-color: #ffffff69;
+  color: rgba(255, 255, 255, 0.512);
+}
+
+::placeholder {
+  color: white;
+  font-style: italic;
+}
+
+[type="text"],
+button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  cursor: pointer;
+  background: #777777;
+  color: white;
+  margin: 0 0.5rem;
+}
+
+[type="text"] {
+  width: 100%;
+}
+
+[type="text"]:active,
+[type="text"]:focus {
+  outline: 0;
+  border: 2px solid #007bff;
+}
+
+[type="checkbox"] {
+  margin-right: 1rem;
+  font-size: 2rem;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background: #7777778b;
+  border-radius: 5px;
+  color: white;
+}
+
+li span {
+  flex: 1;
+  display: inline-block;
+  padding: 0.5rem;
+  width: 250px;
+  border-radius: 5px;
+}
+li span:hover {
+  background: rgba(179, 215, 255, 0.52);
+}
+
+li span:focus {
+  outline: 0;
+  border: 2px solid #007bff;
+  background: rgba(179, 207, 255, 0.52);
+}
+
+footer {
+  background-color: rgba(173, 216, 230, 0.274);
+  padding: 20px;
+  width: 100vw;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.footerContainer a {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  gap: 2rem;
+}
+
+.footerContainer p {
+  color: white;
+}
