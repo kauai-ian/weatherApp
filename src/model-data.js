@@ -1,9 +1,10 @@
 import { renderPage } from "./render";
 export { fetchWeatherData };
 // export { processHeader };
-const weatherAPIKey = process.env.WEATHER_API_KEY;
+
 
 async function fetchWeatherData(city) {
+  const weatherAPIKey = process.env.WEATHER_API_KEY;
   const apiURL = `http://api.weatherapi.com/v1/current.json?key=${weatherAPIKey}&q=${city}&aqi=no`;
 
   try {
