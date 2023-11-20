@@ -1,11 +1,8 @@
-
-import { renderWeather } from "./render";
+// runs the app
 import { renderPage } from "./render";
 import { renderCredits } from "./render"
 
 
-
 renderPage()
-renderWeather()
 renderCredits()
 

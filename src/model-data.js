@@ -1,4 +1,4 @@
-import { renderPage } from "./render";
+
 export { fetchWeatherData };
 // export { processHeader };
 

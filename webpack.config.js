@@ -1,6 +1,16 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+const Dotenv = require("dotenv-webpack");
+const dotenv = require("dotenv").config();
+
+class LogEnvVariablesPlugin {
+  apply(compiler) {
+    compiler.hooks.beforeRun.tap("LogEnvVariablesPlugin", () => {
+      console.log("Environment variables:", process.env);
+    });
+  }
+}
 
 module.exports = {
   entry: "./src/index.js",
@@ -17,10 +27,9 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin(),
-    new webpack.DefinePlugin({
-      "process.env.WEATHER_API_KEY": JSON.stringify(
-        "process.env.WEATHER_API_KEY"
-      ),
-    }),
+    new Dotenv(),
+    new webpack.EnvironmentPlugin(["WEATHER_API_KEY"]),
+
+    new LogEnvVariablesPlugin(), // Log process.env during webpack build
   ],
 };
