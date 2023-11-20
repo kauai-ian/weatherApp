@@ -5,8 +5,8 @@ export { renderFactory };
 
 function renderFactory() {
   const defaultCity = "Honolulu";
-  const header = createElement("header")
-  document.body.appendChild(header)
+  const header = createElement("header");
+  document.body.appendChild(header);
   const section1 = createElement("section", "section1");
   document.body.appendChild(section1);
   const section2 = createElement("section", "section2");
@@ -23,11 +23,11 @@ function renderFactory() {
   };
 
   function renderPage() {
-    const headerContent = `<h1>Weather Conditions App</h1>`;
-    header.innerHTML = headerContent
+    const headerContent = `<h1>Current Weather</h1><h2 class="time"></h2>`;
+    header.innerHTML = headerContent;
     const formDiv = createElement("form", "formDiv");
     const formContent = `<form action="">
-      <label for="zip">Enter City or Zip Code:</label>
+      <label for="city">Enter City or Zip Code:</label>
       <input type="text" name="city" id="city" />
       <button class="getData" type="submit">Get Current Weather</button>
     </form>`;
@@ -36,6 +36,20 @@ function renderFactory() {
 
     const form = getElement("form");
     form.addEventListener("submit", handleFormSubmit);
+
+    const divWeatherContainer = createElement("div", "locationContainer");
+    const iconEl = createElement("p", "icon");
+    const textBoxLocation = createElement("p", "location");
+    const textBoxTemperature = createElement("p", "temperature");
+    const textBoxCondition = createElement("p", "condition");
+    const textBoxWindDir = createElement("p", "windDir");
+
+    divWeatherContainer.appendChild(iconEl);
+    divWeatherContainer.appendChild(textBoxLocation);
+    divWeatherContainer.appendChild(textBoxCondition);
+    divWeatherContainer.appendChild(textBoxTemperature);
+    divWeatherContainer.appendChild(textBoxWindDir);
+    section1.appendChild(divWeatherContainer);
   }
 
   function handleFormSubmit(e) {
@@ -50,20 +64,11 @@ function renderFactory() {
         if (weatherData.error) {
           alert("City not found, please check spelling or try another city");
         } else {
-          clearContentFromWeatherDiv(city)
           renderWeatherData(weatherData, section1);
           cityInput.value = "";
         }
       })
       .catch((error) => console.error("Problem fetching the data", error));
-  }
-
-  function clearContentFromWeatherDiv(city) {
-    const existingDiv = getElement('locationContainer');
-    if (existingDiv) {
-      section1.removeChild(existingDiv)
-    } 
-    // need to work on this more
   }
 
   function renderWeatherData(weatherData) {
@@ -76,26 +81,28 @@ function renderFactory() {
     const _icon = current.condition.icon;
     const _windDir = current.wind_dir;
     const _windSpeed = current.wind_mph;
-    // display data on page, create elements and then assign them
-    const divWeatherContainer = createElement("div", "locationContainer");
-    const iconEl = createElement("p", "icon");
-    const textBoxLocation = createElement("p", "location");
-    const textBoxTemperature = createElement("p", "temperature");
-    const textBoxCondition = createElement("p", "condition");
-    const textBoxWindDir = createElement("p", "windDir");
+    const _time = location.localtime;
+    const formattedTime = new Date(_time).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
 
+    const timeEl = getElement(".time");
+    const iconEl = getElement(".icon");
+    const textBoxLocation = getElement(".location");
+    const textBoxTemperature = getElement(".temperature");
+    const textBoxCondition = getElement(".condition");
+    const textBoxWindDir = getElement("p.windDir");
+
+    timeEl.textContent = `${formattedTime}`;
     textBoxLocation.textContent = `Location: ${_city}, ${_state}`;
     iconEl.innerHTML = `<img src=${_icon}>`;
     textBoxCondition.textContent = `Condition: ${_condition}`;
     textBoxTemperature.textContent = `Temperature: ${Math.round(_tempf)}°F`;
-    textBoxWindDir.textContent = `Wind: ${Math.round(_windSpeed)} mph from ${_windDir}`;
-
-    divWeatherContainer.appendChild(iconEl);
-    divWeatherContainer.appendChild(textBoxLocation);
-    divWeatherContainer.appendChild(textBoxCondition);
-    divWeatherContainer.appendChild(textBoxTemperature);
-    divWeatherContainer.appendChild(textBoxWindDir);
-    section1.appendChild(divWeatherContainer);
+    textBoxWindDir.textContent = `Wind: ${Math.round(
+      _windSpeed
+    )} mph from ${_windDir}`;
   }
 
   function renderCredits() {
