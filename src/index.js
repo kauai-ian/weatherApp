@@ -1,8 +1,7 @@
 // runs the app
-import { renderPage } from "./render";
-import { renderCredits } from "./render"
+import { renderFactory } from "./render";
+import './style.css';
 
-
-renderPage()
-renderCredits()
-
+const weatherApp = renderFactory();
+weatherApp.renderPage();
+weatherApp.renderCredits();

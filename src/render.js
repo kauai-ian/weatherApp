@@ -1,88 +1,120 @@
 import { createElement, getElement } from "./helpers";
 import { fetchWeatherData } from "./model-data";
-export { renderWeatherData };
-export { handleFormSubmit };
-export { renderPage };
-export { renderCredits };
+import { renderFooter } from "./footer";
+export { renderFactory };
 
-function renderPage() {
+function renderFactory() {
+  const defaultCity = "Honolulu";
+  const header = createElement("header")
+  document.body.appendChild(header)
   const section1 = createElement("section", "section1");
   document.body.appendChild(section1);
-  const formDiv = createElement("form", "formDiv");
-  const formContent = `<form action="">
-      <label for="zip">Enter City or Zip Code:</label>
-      <input type="text" name="city" id="city" />
-      <button class="getData" type="submit">Get Weather Data</button>
-    </form>`;
-  formDiv.innerHTML = formContent;
-  section1.appendChild(formDiv);
-
-  const form = getElement("form");
-  form.addEventListener("submit", handleFormSubmit);
-}
-
-function handleFormSubmit(e) {
-  e.preventDefault();
-  const cityInput = getElement("#city");
-  const city = cityInput.value.trim();
-  fetchWeatherData(city)
-    .then(renderWeatherData)
-    .catch((error) => console.error("Problem fetching the data", error));
-}
-
-function renderWeatherData(weatherData) {
-  const { location, current } = weatherData; // extracts the location and current objects
-  // extract the specific data
-  const _city = location.name;
-  const _state = location.region;
-  const _tempf = current.temp_f;
-  const _condition = current.condition.text;
-  const _icon = current.condition.icon;
-  const _windDir = current.wind_dir;
-  const _windSpeed = current.wind_mph;
-  // display data on page, create elements and then assign them
-  const divWeatherContainer = createElement("div", "locationContainer");
-  const iconEl = createElement("p", "icon");
-  const textBoxLocation = createElement("p", "location");
-  const textBoxTemperature = createElement("p", "temperature");
-  const textBoxCondition = createElement("p", "condition");
-  const textBoxWindDir = createElement("p", "windDir");
-
-  textBoxLocation.textContent = `Location: ${_city}, ${_state}`;
-  iconEl.innerHTML = `<img src=${_icon}>`;
-  textBoxCondition.textContent = `Condition: ${_condition}`;
-  textBoxTemperature.textContent = `Temperature: ${_tempf}°F`;
-  textBoxWindDir.textContent = `Wind: ${_windSpeed}mph from ${_windDir}`;
-
-  divWeatherContainer.appendChild(iconEl);
-  divWeatherContainer.appendChild(textBoxLocation);
-  divWeatherContainer.appendChild(textBoxCondition);
-  divWeatherContainer.appendChild(textBoxTemperature);
-  divWeatherContainer.appendChild(textBoxWindDir);
-  document.body.appendChild(divWeatherContainer);
-}
-
-function renderCredits() {
   const section2 = createElement("section", "section2");
   document.body.appendChild(section2);
+  const section3 = createElement("section", "section3");
+  document.body.appendChild(section3);
 
-  const creditDiv = createElement("div", "creditDiv");
-  const paragraph = createElement("p");
-  paragraph.textContent = "Powered by";
+  window.onload = function () {
+    fetchWeatherData(defaultCity)
+      .then((weatherData) => renderWeatherData(weatherData, section1))
+      .catch((error) => {
+        console.error("Error fetching weather data for default city", error);
+      });
+  };
 
-  const weatherApiLink = createElement("a");
-  weatherApiLink.href = "https://www.weatherapi.com/";
-  weatherApiLink.title = "Free Weather API";
-  weatherApiLink.textContent = "WeatherAPI.com";
+  function renderPage() {
+    const headerContent = `<h1>Weather Conditions App</h1>`;
+    header.innerHTML = headerContent
+    const formDiv = createElement("form", "formDiv");
+    const formContent = `<form action="">
+      <label for="zip">Enter City or Zip Code:</label>
+      <input type="text" name="city" id="city" />
+      <button class="getData" type="submit">Get Current Weather</button>
+    </form>`;
+    formDiv.innerHTML = formContent;
+    section2.appendChild(formDiv);
 
-  const weatherApiImg = createElement("img");
-  weatherApiImg.src =
-    "https://cdn.weatherapi.com/v4/images/weatherapi_logo.png";
-  weatherApiImg.alt = "Weather data by WeatherAPI.com";
-  weatherApiImg.border = "0";
+    const form = getElement("form");
+    form.addEventListener("submit", handleFormSubmit);
+  }
 
-  weatherApiLink.appendChild(weatherApiImg);
-  creditDiv.appendChild(paragraph);
-  creditDiv.appendChild(weatherApiLink);
-  section2.appendChild(creditDiv);
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const cityInput = getElement("#city");
+    const city = cityInput.value.trim();
+    if (!city) {
+      return;
+    }
+    fetchWeatherData(city)
+      .then((weatherData) => {
+        if (weatherData.error) {
+          alert("City not found, please check spelling or try another city");
+        } else {
+          clearContentFromWeatherDiv(city)
+          renderWeatherData(weatherData, section1);
+          cityInput.value = "";
+        }
+      })
+      .catch((error) => console.error("Problem fetching the data", error));
+  }
+
+  function clearContentFromWeatherDiv(city) {
+    const existingDiv = getElement('locationContainer');
+    if (existingDiv) {
+      section1.removeChild(existingDiv)
+    } 
+    // need to work on this more
+  }
+
+  function renderWeatherData(weatherData) {
+    const { location, current } = weatherData; // extracts the location and current objects
+    // extract the specific data
+    const _city = location.name;
+    const _state = location.region;
+    const _tempf = current.temp_f;
+    const _condition = current.condition.text;
+    const _icon = current.condition.icon;
+    const _windDir = current.wind_dir;
+    const _windSpeed = current.wind_mph;
+    // display data on page, create elements and then assign them
+    const divWeatherContainer = createElement("div", "locationContainer");
+    const iconEl = createElement("p", "icon");
+    const textBoxLocation = createElement("p", "location");
+    const textBoxTemperature = createElement("p", "temperature");
+    const textBoxCondition = createElement("p", "condition");
+    const textBoxWindDir = createElement("p", "windDir");
+
+    textBoxLocation.textContent = `Location: ${_city}, ${_state}`;
+    iconEl.innerHTML = `<img src=${_icon}>`;
+    textBoxCondition.textContent = `Condition: ${_condition}`;
+    textBoxTemperature.textContent = `Temperature: ${Math.round(_tempf)}°F`;
+    textBoxWindDir.textContent = `Wind: ${Math.round(_windSpeed)} mph from ${_windDir}`;
+
+    divWeatherContainer.appendChild(iconEl);
+    divWeatherContainer.appendChild(textBoxLocation);
+    divWeatherContainer.appendChild(textBoxCondition);
+    divWeatherContainer.appendChild(textBoxTemperature);
+    divWeatherContainer.appendChild(textBoxWindDir);
+    section1.appendChild(divWeatherContainer);
+  }
+
+  function renderCredits() {
+    const creditDiv = createElement("div", "creditDiv");
+    const paragraph = createElement("p");
+    paragraph.textContent = "Powered by ";
+
+    const weatherApiLink = createElement("a");
+    weatherApiLink.href = "https://www.weatherapi.com/";
+    weatherApiLink.title = "Free Weather API";
+    weatherApiLink.textContent = " WeatherAPI.com";
+
+    creditDiv.appendChild(paragraph);
+    creditDiv.appendChild(weatherApiLink);
+    section3.appendChild(creditDiv);
+    renderFooter();
+  }
+  return {
+    renderPage,
+    renderCredits,
+  };
 }

@@ -32,4 +32,25 @@ module.exports = {
 
     new LogEnvVariablesPlugin(), // Log process.env during webpack build
   ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[name].[ext]",
+              outputPath: "img/", // Output folder for images
+              publicPath: "img/", // Public path to access images
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
